@@ -209,6 +209,33 @@ void GameConfigEdit::AddMenubarOptions()
 
     AddBoolOption(core_menubar, tr("Dual Core"), QStringLiteral("Core"),
                   QStringLiteral("CPUThread"));
+    {
+      auto* gfx_backend = core_menubar->addMenu(tr("GFX Backend"));
+      gfx_backend->addAction(tr("DX11"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
+                  QStringLiteral("D3D"));
+      });
+      gfx_backend->addAction(tr("DX12"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
+                  QStringLiteral("D3D12"));
+      });
+      gfx_backend->addAction(tr("Vulkan"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
+                  QStringLiteral("Vulkan"));
+      });
+      gfx_backend->addAction(tr("OpenGL"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
+                  QStringLiteral("OGL"));
+      });
+      gfx_backend->addAction(tr("Metal"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
+                  QStringLiteral("Metal"));
+      });
+      gfx_backend->addAction(tr("Software"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
+                  QStringLiteral("D3D"));
+      });
+    }
     AddBoolOption(core_menubar, tr("MMU"), QStringLiteral("Core"), QStringLiteral("MMU"));
 
     auto* video_menubar = m_menu->addMenu(tr("Video"));
