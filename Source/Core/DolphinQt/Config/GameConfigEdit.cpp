@@ -207,58 +207,154 @@ void GameConfigEdit::AddMenubarOptions()
     m_menu->addSeparator();
     auto* core_menubar = m_menu->addMenu(tr("Core"));
 
-    AddBoolOption(core_menubar, tr("Dual Core"), QStringLiteral("Core"),
-                  QStringLiteral("CPUThread"));
-    {
-      auto* gfx_backend = core_menubar->addMenu(tr("GFX Backend"));
-      gfx_backend->addAction(tr("DX11"), this, [this] {
-        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
-                  QStringLiteral("D3D"));
-      });
-      gfx_backend->addAction(tr("DX12"), this, [this] {
-        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
-                  QStringLiteral("D3D12"));
-      });
-      gfx_backend->addAction(tr("Vulkan"), this, [this] {
-        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
-                  QStringLiteral("Vulkan"));
-      });
-      gfx_backend->addAction(tr("OpenGL"), this, [this] {
-        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
-                  QStringLiteral("OGL"));
-      });
-      gfx_backend->addAction(tr("Metal"), this, [this] {
-        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
-                  QStringLiteral("Metal"));
-      });
-      gfx_backend->addAction(tr("Software"), this, [this] {
-        SetOption(QStringLiteral("Core"), QStringLiteral("GFXBackend"),
-                  QStringLiteral("D3D"));
-      });
-    }
-    AddBoolOption(core_menubar, tr("MMU"), QStringLiteral("Core"), QStringLiteral("MMU"));
+    AddBoolOption(core_menubar, tr("CPU Overclock"), QStringLiteral("Core"),
+                  QStringLiteral("OverclockEnable"));
 
-    auto* video_menubar = m_menu->addMenu(tr("Video"));
+    AddBoolOption(core_menubar, tr("DSP Emulator Engine"), QStringLiteral("DSP"),
+                  QStringLiteral("EnableJIT"));
 
-    AddBoolOption(video_menubar, tr("Store EFB Copies to Texture Only"),
-                  QStringLiteral("Video_Hacks"), QStringLiteral("EFBToTextureEnable"));
+    auto* console_menubar = m_menu->addMenu(tr("Console"));
 
-    AddBoolOption(video_menubar, tr("Store XFB Copies to Texture Only"),
-                  QStringLiteral("Video_Hacks"), QStringLiteral("XFBToTextureEnable"));
+    AddBoolOption(console_menubar, tr("Skip Main Menu (GC)"), QStringLiteral("Core"),
+                  QStringLiteral("SkipIPL"));
+
+    AddBoolOption(console_menubar, tr("Use PAL60 Mode (Wii)"), QStringLiteral("Core"),
+                  QStringLiteral("PAL60"));
+
+    AddBoolOption(console_menubar, tr("Aspect Ratio (Wii)"), QStringLiteral("Core"),
+                  QStringLiteral("Widescreen"));
+
+    AddBoolOption(console_menubar, tr("Insert SD Card (Wii)"), QStringLiteral("Core"),
+                  QStringLiteral("WiiSDCard"));
+
+    AddBoolOption(console_menubar, tr("Allow Writes to SD Card (Wii)"), QStringLiteral("Wii"),
+                  QStringLiteral("WiiSDCardAllowWrites"));
 
     {
-      auto* texture_cache = video_menubar->addMenu(tr("Texture Cache"));
-      texture_cache->addAction(tr("Safe"), this, [this] {
-        SetOption(QStringLiteral("Video_Settings"), QStringLiteral("SafeTextureCacheColorSamples"),
-                  QStringLiteral("0"));
+      auto* cpu_engine = core_menubar->addMenu(tr("CPU Emulator Engine"));
+      cpu_engine->addAction(tr("JIT x64"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("CPUCore"), QStringLiteral("1"));
       });
-      texture_cache->addAction(tr("Medium"), this, [this] {
-        SetOption(QStringLiteral("Video_Settings"), QStringLiteral("SafeTextureCacheColorSamples"),
-                  QStringLiteral("512"));
+      cpu_engine->addAction(tr("Cached Interpreter"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("CPUCore"), QStringLiteral("5"));
       });
-      texture_cache->addAction(tr("Fast"), this, [this] {
-        SetOption(QStringLiteral("Video_Settings"), QStringLiteral("SafeTextureCacheColorSamples"),
-                  QStringLiteral("128"));
+      cpu_engine->addAction(tr("Interpreter"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("CPUCore"), QStringLiteral("0"));
+      });
+      auto* emulation_speed = core_menubar->addMenu(tr("Emulation Speed"));
+      emulation_speed->addAction(tr("Unlimited"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.000000000"));
+      });
+      emulation_speed->addAction(tr("10%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.100000001"));
+      });
+      emulation_speed->addAction(tr("20%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.200000003"));
+      });
+      emulation_speed->addAction(tr("30%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.300000012"));
+      });
+      emulation_speed->addAction(tr("40%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.400000006"));
+      });
+      emulation_speed->addAction(tr("50%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.500000000"));
+      });
+      emulation_speed->addAction(tr("60%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.600000024"));
+      });
+      emulation_speed->addAction(tr("70%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.699999988"));
+      });
+      emulation_speed->addAction(tr("80%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.800000012"));
+      });
+      emulation_speed->addAction(tr("90%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("0.900000036"));
+      });
+      emulation_speed->addAction(tr("100%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.00000000"));
+      });
+      emulation_speed->addAction(tr("110%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.10000002"));
+      });
+      emulation_speed->addAction(tr("120%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.20000005"));
+      });
+      emulation_speed->addAction(tr("130%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.30000007"));
+      });
+      emulation_speed->addAction(tr("140%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.39999998"));
+      });
+      emulation_speed->addAction(tr("150%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.50000000"));
+      });
+      emulation_speed->addAction(tr("160%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.60000002"));
+      });
+      emulation_speed->addAction(tr("170%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.70000005"));
+      });
+      emulation_speed->addAction(tr("180%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.80000007"));
+      });
+      emulation_speed->addAction(tr("190%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("1.89999998"));
+      });
+      emulation_speed->addAction(tr("200%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("EmulationSpeed"),
+                  QStringLiteral("2.00000000"));
+      });
+      auto* cpu_overclock_val = core_menubar->addMenu(tr("CPU Overclock %"));
+      cpu_overclock_val->addAction(tr("50%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("Overclock"), QStringLiteral("0.5"));
+      });
+      cpu_overclock_val->addAction(tr("100%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("Overclock"), QStringLiteral("1.0"));
+      });
+      cpu_overclock_val->addAction(tr("150%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("Overclock"), QStringLiteral("1.5"));
+      });
+      cpu_overclock_val->addAction(tr("200%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("Overclock"), QStringLiteral("2.0"));
+      });
+      auto* gpu_overclock_val = core_menubar->addMenu(tr("GPU Overclock %"));
+      gpu_overclock_val->addAction(tr("50%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("SyncGPUOverclock"),
+                  QStringLiteral("0.5"));
+      });
+      gpu_overclock_val->addAction(tr("100%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("SyncGPUOverclock"),
+                  QStringLiteral("1.0"));
+      });
+      gpu_overclock_val->addAction(tr("150%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("SyncGPUOverclock"),
+                  QStringLiteral("1.5"));
+      });
+      gpu_overclock_val->addAction(tr("200%"), this, [this] {
+        SetOption(QStringLiteral("Core"), QStringLiteral("SyncGPUOverclock"),
+                  QStringLiteral("2.0"));
       });
     }
   }
